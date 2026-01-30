@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tremental/theme/app_colors.dart';
+import 'package:tremental/theme/app_text_styles.dart';
+import 'package:tremental/services/user_service.dart';
 import 'package:tremental/widgets/band_card.dart';
 import 'package:tremental/widgets/goto_chat_card.dart';
 import 'package:tremental/widgets/poo.dart';
@@ -19,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: ListView(
           children: [
-            const SizedBox(height: 70),
+            const SizedBox(height: 60),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: WelcomeText(title: '안녕하세요,', subtitle: '오늘은 평온해보여요!'),
+              child: WelcomeText(subtitle: '오늘은 평온해보여요!'),
             ),
 
-            const Poo(pose: PooPose.standing, width: 400, height: 400),
+            const Poo(pose: PooPose.standing, width: 350, height: 350),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 60),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
@@ -102,19 +104,77 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class WelcomeText extends StatelessWidget {
-  const WelcomeText({super.key, required this.title, required this.subtitle});
+class WelcomeText extends StatefulWidget {
+  const WelcomeText({super.key, required this.subtitle});
 
-  final String title;
   final String subtitle;
+
+  @override
+  State<WelcomeText> createState() => _WelcomeTextState();
+}
+
+class _WelcomeTextState extends State<WelcomeText> {
+  final UserService _userService = UserService();
+  String? _userName;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // 캐시에서 동기적으로 읽기
+    final user = _userService.currentUser;
+    if (user != null) {
+      _userName = user['name'] as String?;
+      _isLoading = false;
+    } else {
+      // 캐시에 없으면 서버에서 로드
+      _loadUserName();
+    }
+  }
+
+  Future<void> _loadUserName() async {
+    try {
+      await _userService.loadUser();
+      if (mounted) {
+        setState(() {
+          _userName = _userService.currentUser?['name'] as String?;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.displayLarge),
-        Text(subtitle, style: Theme.of(context).textTheme.headlineLarge),
+        Text(
+          _isLoading
+              ? '안녕하세요,'
+              : _userName != null && _userName!.isNotEmpty
+              ? '안녕하세요, $_userName님'
+              : '안녕하세요,',
+          style: AppTextStyles.notoSansKr(
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        Text(
+          widget.subtitle,
+          style: AppTextStyles.notoSansKr(
+            fontSize: 28,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textPrimary,
+          ),
+        ),
       ],
     );
   }

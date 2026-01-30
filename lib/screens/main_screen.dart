@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tremental/screens/chat_screen.dart';
 import 'package:tremental/screens/home_screen.dart';
+import 'package:tremental/screens/calendar_screen.dart';
 import 'package:tremental/theme/app_colors.dart';
 
 class MainScreen extends StatefulWidget {
@@ -90,14 +91,5 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
-  }
-}
-
-class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('달력 화면')));
   }
 }

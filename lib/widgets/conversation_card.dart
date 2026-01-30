@@ -25,7 +25,7 @@ class ConversationCard extends StatelessWidget {
       height: 120,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.cardColor,
+        color: const Color.fromARGB(255, 231, 231, 231),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
