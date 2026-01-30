@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "784541745915",
+    "project_id": "tremental",
+    "storage_bucket": "tremental.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784541745915:android:2532391da4b318b9c0665e",
+        "android_client_info": {
+          "package_name": "com.tremental.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784541745915-jrbkuqtrif0aak2i0imnied6d6qdrl8d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tremental.app",
+            "certificate_hash": "cbb8a6fe06722c260ecfdf508b2ab54b64e9bbbe"
+          }
+        },
+        {
+          "client_id": "784541745915-5o38o2knc4dvn84o6alkdpe77tqkoqrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO8NUJGxUcfxufNu1dP-B0opygjeo4RbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784541745915-5o38o2knc4dvn84o6alkdpe77tqkoqrg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784541745915-eb9gjngbvaomv48kgad2e88rsc8t6edb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tremental.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
