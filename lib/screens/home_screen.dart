@@ -6,6 +6,7 @@ import 'package:tremental/widgets/band_card.dart';
 import 'package:tremental/widgets/goto_chat_card.dart';
 import 'package:tremental/widgets/poo.dart';
 import 'package:tremental/widgets/conversation_card.dart';
+import 'package:tremental/screens/chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: WelcomeText(subtitle: '오늘은 평온해보여요!'),
             ),
-
+            const SizedBox(height: 30),
             const Poo(pose: PooPose.standing, width: 350, height: 350),
 
             Padding(
@@ -37,9 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 4),
 
                   Expanded(
-                    child: GoToChatCard(
-                      title: '바로 아무거나',
-                      subtitle: '곰돌이랑 대화 시작하기',
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChatScreen(),
+                          ),
+                        );
+                      },
+                      child: const GoToChatCard(
+                        title: '바로 아무거나',
+                        subtitle: '곰돌이랑 대화 시작하기',
+                      ),
                     ),
                   ),
                 ],
@@ -162,17 +173,17 @@ class _WelcomeTextState extends State<WelcomeText> {
               ? '안녕하세요, $_userName님'
               : '안녕하세요,',
           style: AppTextStyles.notoSansKr(
-            fontSize: 28,
-            fontWeight: FontWeight.w800,
+            fontSize: 24,
+            fontWeight: FontWeight.w300,
             color: AppColors.textPrimary,
           ),
         ),
         Text(
           widget.subtitle,
           style: AppTextStyles.notoSansKr(
-            fontSize: 28,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textSecondary,
           ),
         ),
       ],

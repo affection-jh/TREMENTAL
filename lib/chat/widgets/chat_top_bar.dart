@@ -26,48 +26,27 @@ class ChatTopBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: 44,
       leading: IconButton(
         onPressed: onBack ?? () => Navigator.maybePop(context),
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 28),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
         color: AppColors.primary,
       ),
       titleSpacing: 0,
-      title: Align(
-        alignment: Alignment.bottomLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              time,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                height: 1.1,
-                color: AppColors.textPrimary,
-              ),
+      centerTitle: true,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary.withOpacity(0.6),
+              height: 1.1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                '·',
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary.withOpacity(0.6),
-                ),
-              ),
-            ),
-            Text(
-              address,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textSecondary.withOpacity(0.6),
-                height: 1.1,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-      actions: [_TopBarIcon(onTap: () {}), SizedBox(width: 6)],
+
+      //actions: [_TopBarIcon(onTap: () {}), SizedBox(width: 6)],
     );
   }
 }
@@ -83,8 +62,8 @@ class _TopBarIcon extends StatelessWidget {
       onTap: onTap,
       child: SvgPicture.asset(
         'assets/icons/phone.svg',
-        width: 24,
-        height: 24,
+        width: 12,
+        height: 12,
         colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
       ),
     );

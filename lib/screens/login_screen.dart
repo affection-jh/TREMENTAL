@@ -96,11 +96,6 @@ class _LoginScreenState extends State<LoginScreen>
 
       // 사용자가 취소한 경우 (null 반환)는 조용히 처리 - 스낵바 없이
       if (userCredential == null) {
-        if (mounted) {
-          setState(() {
-            _isSigningIn = false;
-          });
-        }
         return;
       }
 
@@ -109,11 +104,6 @@ class _LoginScreenState extends State<LoginScreen>
     } on SignInWithAppleAuthorizationException catch (e) {
       // 사용자가 취소한 경우는 조용히 처리 (스낵바 없이)
       if (e.code == AuthorizationErrorCode.canceled) {
-        if (mounted) {
-          setState(() {
-            _isSigningIn = false;
-          });
-        }
         return;
       }
 
@@ -137,15 +127,13 @@ class _LoginScreenState extends State<LoginScreen>
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _isSigningIn = false;
-        });
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('로그인 중 오류가 발생했습니다: $e')));
       }
     } finally {
-      if (mounted && !_isSigningIn) {
+      // 모든 경우(성공, 실패, 취소)에 확실히 로딩 스피너 제거
+      if (mounted) {
         setState(() {
           _isSigningIn = false;
         });
@@ -166,11 +154,6 @@ class _LoginScreenState extends State<LoginScreen>
 
       // 사용자가 취소한 경우 (null 반환)는 조용히 처리 - 스낵바 없이
       if (userCredential == null) {
-        if (mounted) {
-          setState(() {
-            _isSigningIn = false;
-          });
-        }
         return;
       }
 
@@ -183,12 +166,16 @@ class _LoginScreenState extends State<LoginScreen>
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _isSigningIn = false;
-        });
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('로그인 중 오류가 발생했습니다: $e')));
+      }
+    } finally {
+      // 모든 경우(성공, 실패, 취소)에 확실히 로딩 스피너 제거
+      if (mounted) {
+        setState(() {
+          _isSigningIn = false;
+        });
       }
     }
   }

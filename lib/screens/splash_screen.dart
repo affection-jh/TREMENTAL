@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
             (route) => false,
           );
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('연결 시간이 초과되었습니다. 다시 시도해주세요.')),
+            const SnackBar(content: Text('연결 오류가 발생했습니다. 다시 시도해주세요')),
           );
         }
       }

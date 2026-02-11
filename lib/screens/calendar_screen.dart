@@ -6,6 +6,8 @@ import 'package:tremental/theme/app_text_styles.dart';
 import 'package:tremental/models/conversation.dart';
 import 'package:tremental/services/conversation_service.dart';
 import 'package:tremental/widgets/poo.dart';
+import 'package:tremental/widgets/conversation_card.dart';
+import 'package:tremental/screens/chat_screen.dart';
 import 'package:tremental/providers/overlay_provider.dart';
 import 'package:intl/intl.dart';
 
@@ -84,6 +86,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
             )
             .toList() ??
         [];
+
+    // 하드코딩된 샘플 데이터 (임시)
+    final hardcodedScheduledConversations =
+        selectedDateConversations.isEmpty
+            ? [
+              Conversation(
+                id: 'hardcoded-1',
+                date: DateTime(2025, 12, 25, 14, 15),
+                type: ConversationType.scheduled,
+                address: '성동구 왕십리로 45',
+              ),
+            ]
+            : selectedDateConversations;
+
+    final hardcodedPastConversations =
+        pastConversations.isEmpty
+            ? [
+              Conversation(
+                id: 'hardcoded-past-1',
+                date: DateTime(2025, 12, 25),
+                type: ConversationType.completed,
+                topic: '크리스마스에 뭐할지에 대한 대화',
+              ),
+              Conversation(
+                id: 'hardcoded-past-2',
+                date: DateTime(2025, 12, 25),
+                type: ConversationType.completed,
+                topic: '크리스마스에 뭐할지에 대한 대화',
+              ),
+            ]
+            : pastConversations;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -187,77 +220,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _buildCalendar(monthData),
             const SizedBox(height: 32),
             // 대화가 필요해요 섹션
-            if (selectedDateConversations.isNotEmpty) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  children: [
-                    Text(
-                      '${_getDayOfWeek(_selectedDate)} ${_selectedDate.day}',
-                      style: AppTextStyles.notoSansKr(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '대화가 필요해요',
-                      style: AppTextStyles.notoSansKr(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
+            ConversationSectionHeader(
+              dayOfWeek: _getDayOfWeek(_selectedDate),
+              day: _selectedDate.day,
+              title: '대화가 필요해요',
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildScheduledConversationCard(
+                hardcodedScheduledConversations.first,
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildScheduledConversationCard(
-                  selectedDateConversations.first,
-                ),
-              ),
-              const SizedBox(height: 32),
-            ],
+            ),
+            const SizedBox(height: 32),
             // 지난 대화 둘러보기
-            if (pastConversations.isNotEmpty) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  children: [
-                    Text(
-                      '${_getDayOfWeek(_selectedDate)} ${_selectedDate.day}',
-                      style: AppTextStyles.notoSansKr(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '지난 대화 둘러보기',
-                      style: AppTextStyles.notoSansKr(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
+            ConversationSectionHeader(
+              dayOfWeek: _getDayOfWeek(_selectedDate),
+              day: _selectedDate.day,
+              title: '지난 대화 둘러보기',
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children:
+                    hardcodedPastConversations
+                        .map((conv) => _buildPastConversationCard(conv))
+                        .toList(),
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children:
-                      pastConversations
-                          .map((conv) => _buildPastConversationCard(conv))
-                          .toList(),
-                ),
-              ),
-            ],
+            ),
             const SizedBox(height: 32),
           ],
         ),
@@ -329,17 +320,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       prevMonthDays - (firstDayWeekday - 1 - dayIndex);
                   return Expanded(
                     child: Container(
-                      height: 80,
+                      height: 70,
                       margin: const EdgeInsets.symmetric(horizontal: 2),
-                      child: Center(
-                        child: Text(
-                          '$prevDay',
-                          style: AppTextStyles.notoSansKr(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary.withOpacity(0.3),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 8),
+                          Text(
+                            '$prevDay',
+                            style: AppTextStyles.notoSansKr(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textSecondary.withOpacity(0.3),
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          const SizedBox(height: 13),
+                        ],
                       ),
                     ),
                   );
@@ -350,17 +351,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   final nextDay = dayOfWeek - daysInMonth;
                   return Expanded(
                     child: Container(
-                      height: 80,
+                      height: 70,
                       margin: const EdgeInsets.symmetric(horizontal: 2),
-                      child: Center(
-                        child: Text(
-                          '$nextDay',
-                          style: AppTextStyles.notoSansKr(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary.withOpacity(0.3),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 8),
+                          Text(
+                            '$nextDay',
+                            style: AppTextStyles.notoSansKr(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textSecondary.withOpacity(0.3),
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          const SizedBox(height: 13),
+                        ],
                       ),
                     ),
                   );
@@ -473,103 +484,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildScheduledConversationCard(Conversation conversation) {
     final timeFormat = DateFormat('HH:mm');
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat('yyyy.MM.dd').format(conversation.date),
-                  style: AppTextStyles.notoSansKr(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.onCardSecondary,
-                  ),
+    final dateStr = DateFormat('yyyy.MM.dd').format(conversation.date);
+    final timeStr = timeFormat.format(conversation.date);
+
+    return ConversationCard(
+      date: dateStr,
+      address: conversation.address,
+      time: timeStr,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => ChatScreen(
+                  conversationAddress: conversation.address,
+                  conversationTime: timeStr,
+                  conversationDate: dateStr,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  conversation.address ?? '',
-                  style: AppTextStyles.notoSansKr(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.onCardPrimary,
-                  ),
-                ),
-              ],
-            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Icon(
-                Icons.access_time,
-                color: AppColors.onCardSecondary,
-                size: 20,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                timeFormat.format(conversation.date),
-                style: AppTextStyles.notoSansKr(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.onCardPrimary,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildPastConversationCard(Conversation conversation) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat('yyyy.MM.dd').format(conversation.date),
-                  style: AppTextStyles.notoSansKr(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.onCardSecondary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  conversation.topic ?? '대화',
-                  style: AppTextStyles.notoSansKr(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.onCardPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.onCardSecondary,
-            size: 16,
-          ),
-        ],
-      ),
+    return ConversationCard(
+      date: DateFormat('yyyy.MM.dd').format(conversation.date),
+      topic: conversation.topic,
+      mode: ConversationCardMode.past,
     );
   }
 
@@ -853,6 +795,49 @@ class _DatePickerContentState extends State<_DatePickerContent> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 대화 섹션 헤더 (예: "목요일 21 대화가 필요해요")
+class ConversationSectionHeader extends StatelessWidget {
+  final String dayOfWeek;
+  final int day;
+  final String title;
+
+  const ConversationSectionHeader({
+    super.key,
+    required this.dayOfWeek,
+    required this.day,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$dayOfWeek $day',
+            style: AppTextStyles.notoSansKr(
+              fontSize: 16,
+              fontWeight: FontWeight.w300,
+              color: AppColors.textSecondary,
+            ),
+          ),
+
+          Text(
+            title,
+            style: AppTextStyles.notoSansKr(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
